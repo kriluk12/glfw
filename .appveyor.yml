@@ -1,3 +1,6 @@
+image:
+    - Visual Studio 2015
+    - Visual Studio 2019
 branches:
     only:
         - ci
@@ -7,15 +10,39 @@ skip_tags: true
 environment:
     CFLAGS: /WX
     matrix:
-        - BUILD_SHARED_LIBS: ON
-        - BUILD_SHARED_LIBS: OFF
+        - GENERATOR: Visual Studio 10 2010
+          BUILD_SHARED_LIBS: ON
+        - GENERATOR: Visual Studio 10 2010
+          BUILD_SHARED_LIBS: OFF
+        - GENERATOR: Visual Studio 11 2012
+          BUILD_SHARED_LIBS: ON
+        - GENERATOR: Visual Studio 11 2012
+          BUILD_SHARED_LIBS: OFF
+        - GENERATOR: Visual Studio 16 2019
+          BUILD_SHARED_LIBS: ON
+        - GENERATOR: Visual Studio 16 2019
+          BUILD_SHARED_LIBS: OFF
 matrix:
     fast_finish: true
+    exclude:
+        - image: Visual Studio 2015
+          GENERATOR: Visual Studio 16 2019
+        - image: Visual Studio 2019
+          GENERATOR: Visual Studio 10 2010
+        - image: Visual Studio 2019
+          GENERATOR: Visual Studio 11 2012
 build_script:
-    - mkdir build
-    - cd build
-    - cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% ..
-    - cmake --build .
+    - cmake -S . -B build -G "%GENERATOR%" -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS%
+    - cmake --build build
+for:
+-
+    matrix:
+        only:
+            - GENERATOR: Visual Studio 10 2010
+            - GENERATOR: Visual Studio 11 2012
+    build_script:
+        - cmake -S . -B build -G "%GENERATOR%" -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS%
+        - cmake --build build --target glfw
 notifications:
     - provider: Email
       to:
