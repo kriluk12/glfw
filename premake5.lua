@@ -2,7 +2,7 @@ project "GLFW"
 	kind "StaticLib"
 	language "C"
 
-	outputDir = "%{cfg.buildcfg}-%{cfg.system}"
+	outputDir = "%{cfg.buildcfg}_%{cfg.system}_%{cfg.architecture}"
 
 	targetdir ("bin/" .. outputDir)
 	objdir ("bin-int/" .. outputDir)
@@ -19,7 +19,7 @@ project "GLFW"
 		"src/vulkan.c",
 		"src/window.c"
 	}
-	
+
 	filter "system:windows"
 		systemversion "latest"
 		staticruntime "On"
@@ -37,8 +37,8 @@ project "GLFW"
 			"src/osmesa_context.c"
 		}
 
-		defines 
-		{ 
+		defines
+		{
 			"_GLFW_WIN32",
 			"_CRT_SECURE_NO_WARNINGS"
 		}

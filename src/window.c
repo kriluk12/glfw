@@ -187,7 +187,8 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
         return NULL;
 
     window = calloc(1, sizeof(_GLFWwindow));
-    window->next = _glfw.windowListHead;
+	if(window) window->next = _glfw.windowListHead;
+    
     _glfw.windowListHead = window;
 
     window->videoMode.width       = width;
